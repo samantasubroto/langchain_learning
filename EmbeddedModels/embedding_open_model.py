@@ -9,4 +9,3 @@ documents = [
 ]
 
 vector = embeddings.embed_documents(documents);
-print(vector);

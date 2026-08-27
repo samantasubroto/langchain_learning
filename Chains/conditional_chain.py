@@ -39,15 +39,13 @@ Customer statement:
     input_variables=["feedback"],
     partial_variables={
         "format_instructions": pydantic_parser.get_format_instructions()
-    }
+    }   
 )
 
 sentiment_chain = sentiment_prompt | model | pydantic_parser
 
 
-# -------------------------
 # Positive response
-# -------------------------
 
 positive_prompt = PromptTemplate(
     template="""
@@ -65,9 +63,6 @@ positive_prompt = PromptTemplate(
 positive_chain = positive_prompt | model | str_parser
 
 
-# -------------------------
-# Negative response
-# -------------------------
 
 negative_prompt = PromptTemplate(
     template="""
@@ -85,19 +80,11 @@ negative_prompt = PromptTemplate(
 negative_chain = negative_prompt | model | str_parser
 
 
-# -------------------------
-# Keep original feedback + sentiment
-# -------------------------
-
 classification_chain = RunnableParallel(
     feedback=lambda x: x["feedback"],
     sentiment=sentiment_chain
 )
 
-
-# -------------------------
-# Conditional routing
-# -------------------------
 
 feedback_chain = (
     classification_chain
@@ -115,9 +102,6 @@ feedback_chain = (
 )
 
 
-# -------------------------
-# Invoke
-# -------------------------
 
 result = feedback_chain.invoke({
     "feedback": "The product itself is honestly amazing and works exactly as advertised, "
